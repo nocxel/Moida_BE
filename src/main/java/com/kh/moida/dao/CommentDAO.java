@@ -1,18 +1,16 @@
 package com.kh.moida.dao;
 
-
-import com.kh.moida.util.Common;
-import com.kh.moida.vo.CommentVO;
-import com.kh.moida.vo.PostVO;
 import org.springframework.stereotype.Repository;
-
-import javax.xml.stream.events.Comment;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.kh.moida.util.Common;
+import com.kh.moida.vo.CommentVO;
+
 
 @Repository
 public class CommentDAO {
