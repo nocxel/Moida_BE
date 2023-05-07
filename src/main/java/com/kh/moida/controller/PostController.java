@@ -1,16 +1,15 @@
 package com.kh.moida.controller;
 
-import org.apache.coyote.Response;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import com.kh.moida.dao.PostDAO;
 import com.kh.moida.vo.PostVO;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 @CrossOrigin(origins = "http://localhost:3000")
@@ -20,6 +19,7 @@ public class PostController {
 
     /**
      * GET : 게시판에 따른 게시물 조회
+     *
      * @param boardName (ex - '자유'
      * @return
      */

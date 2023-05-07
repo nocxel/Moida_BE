@@ -8,10 +8,7 @@ import lombok.NoArgsConstructor;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-/**
- * 게시물의 VO입니다
- * boardName in [ 'free', 'qna' ]
- */
+
 public class PostVO {
     private int postId;
     private int userId;
