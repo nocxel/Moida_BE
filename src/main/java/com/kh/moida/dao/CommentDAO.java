@@ -19,25 +19,28 @@ public class CommentDAO {
     PreparedStatement pstmt = null;
     ResultSet rSet = null;
 
-    public List<CommentVO> commentVOList(int postId) {
+    public List<CommentVO> getCommentsByPostId(int postId) {
         List<CommentVO> list = new ArrayList<>();
-        // boardName 체크하는 메소드 있어야겠지?
+
         try {
             conn = Common.getConnection();
             StringBuilder sql = new StringBuilder();
-            sql.append("SELECT C.*, U.NICKNAME FROM COMMENTS C INNER JOIN USER_INFO U ");
-            sql.append("ON C.USER_ID = U.USER_ID ");
-            sql.append("WHERE POST_ID = ?  ");
+
+            sql.append("SELECT P.*, U.NICKNAME, U.IMG_URL FROM POST_COMMENT P INNER JOIN USER_INFO U ");
+            sql.append("ON P.USER_ID = U.USER_ID WHERE POST_ID = ? ");
+            sql.append("START WITH PARENT_COMMENT_ID IS NULL ");
+            sql.append("CONNECT BY PRIOR POST_COMMENT_ID = PARENT_COMMENT_ID ");
 
             pstmt = conn.prepareStatement(sql.toString());
             pstmt.setString(1, String.valueOf(postId));
             rSet = pstmt.executeQuery();
 
             while (rSet.next()) {
-                int commentId = rSet.getInt("COMMENT_ID");
+                int commentId = rSet.getInt("POST_COMMENT_ID");
                 int userId = rSet.getInt("USER_ID");
                 int parentId = rSet.getInt("PARENT_COMMENT_ID");
                 String nickname = rSet.getString("NICKNAME"); // 닉네임은 POST테이블에 있진 않지만 기본적으로 조인해서 사용할 예정입니다
+                String imgUrl = rSet.getString("IMG_URL");
                 String regTime = rSet.getString("REG_TIME");
                 String contents = rSet.getString("CONTENTS");
 
@@ -47,6 +50,7 @@ public class CommentDAO {
                 vo.setParentId(parentId);
                 vo.setPostId(postId);
                 vo.setNickname(nickname);
+                vo.setImgUrl(imgUrl);
                 vo.setRegTime(regTime);
                 vo.setContents(contents);
 

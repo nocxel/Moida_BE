@@ -15,6 +15,8 @@ public class PostDAO {
     PreparedStatement pstmt = null;
     ResultSet rSet = null;
 
+
+
     /**
      * boardName 넣으면 boardName에 해당하는 게시물리스트 반환
      * @param boardName 보드 이름 (ex '자유', '고민')

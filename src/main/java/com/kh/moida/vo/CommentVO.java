@@ -15,14 +15,16 @@ public class CommentVO {
     private int postId;
     private int parentId;
     private String nickname;
+    private String imgUrl;
     private String regTime;
     private String contents;
 
 
     // insert 용 VO
-    CommentVO (int userId, int postId, String contents) {
+    CommentVO (int userId, int postId, int parentId, String contents) {
         this.userId = userId;
         this.postId = postId;
+        this.parentId = parentId;
         this.contents = contents;
     }
 

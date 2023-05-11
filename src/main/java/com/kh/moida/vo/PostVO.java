@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -21,6 +23,7 @@ public class PostVO {
     private int recommend;
     private String boardName;
     private String imgUrl;
+    private List<CommentVO> comments;
 
 
     // insert용 VO입니다
