@@ -19,6 +19,7 @@ public class CommentDAO {
     PreparedStatement pstmt = null;
     ResultSet rSet = null;
 
+
     public List<CommentVO> getCommentsByPostId(int postId) {
         List<CommentVO> list = new ArrayList<>();
 
