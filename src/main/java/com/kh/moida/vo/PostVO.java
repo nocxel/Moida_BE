@@ -15,6 +15,7 @@ public class PostVO {
     private int postId;
     private int userId;
     private String nickname; // 닉네임은 POST테이블에 있진 않지만 기본적으로 조인해서 사용할 예정입니다
+    private String userImgUrl;
     private String regTime;
     private String title;
     private String contents;

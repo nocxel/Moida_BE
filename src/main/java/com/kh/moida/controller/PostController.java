@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -51,18 +50,46 @@ public class PostController {
         return new ResponseEntity<>(post, HttpStatus.OK);
     }
 
-    @PostMapping("/lounge/{boardName}/write")
-    public ResponseEntity<Boolean> memberRegister(@PathVariable String boardName, @RequestBody Map<String, String> regData) {
-        String getUserId = regData.get("userId");
+    @PostMapping("/lounge/post/insert")
+    public ResponseEntity<Boolean> postRegister(@RequestBody Map<String, String> regData) {
+        int getUserId = Integer.parseInt(regData.get("userId"));
         String getTitle = regData.get("title");
         String getContents = regData.get("contents");
+        String getBoardName = regData.get("boardName");
         String getImgUrl = regData.get("imgUrl");
         PostDAO dao = new PostDAO();
-        boolean isTrue = dao.postInsert(getUserId, getTitle, getContents, boardName, getImgUrl);
-        if (isTrue) System.out.println(HttpStatus.OK);
-        return new ResponseEntity<>(isTrue, HttpStatus.OK);
-
+        boolean insertResult = dao.postInsert(getUserId, getTitle, getContents, getBoardName, getImgUrl);
+        if (insertResult) System.out.println(HttpStatus.OK);
+        return new ResponseEntity<>(insertResult, HttpStatus.OK);
     }
+
+    @PostMapping("/lounge/comment/insert")
+    public ResponseEntity<Boolean> commentRegister(@RequestBody Map<String, String> regData) {
+        int getUserId = Integer.parseInt(regData.get("userId"));
+        int getPostId = Integer.parseInt(regData.get("postId"));
+        int getParentId = regData.get("parentId") != null ? Integer.parseInt(regData.get("parentId")) : 0;
+        String getContents = regData.get("contents");
+        CommentDAO dao = new CommentDAO();
+        boolean insertResult;
+        if (getParentId < 1) {
+            insertResult = dao.postCommentInsert(getUserId, getPostId, getContents);
+        } else { // parentId 가 있을 때 ( 대댓글 등록 )
+            insertResult = dao.postCommentInsert(getUserId, getPostId, getParentId, getContents);
+        }
+        if (insertResult) System.out.println(HttpStatus.OK);
+        return new ResponseEntity<>(insertResult, HttpStatus.OK);
+    }
+
+    @PostMapping("/lounge/comment/update")
+    public ResponseEntity<Boolean> commentModifier(@RequestBody Map<String, String> modData) {
+        int getCommentId = Integer.parseInt(modData.get("commentId"));
+        String getContents = modData.get("contents");
+        CommentDAO dao = new CommentDAO();
+        boolean updateResult = dao.postCommentUpdate(getCommentId, getContents);
+        if (updateResult) System.out.println(HttpStatus.OK);
+        return new ResponseEntity<>(updateResult, HttpStatus.OK);
+    }
+
 
 
 }

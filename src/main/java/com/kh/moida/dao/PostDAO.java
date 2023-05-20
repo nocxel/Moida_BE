@@ -19,8 +19,6 @@ public class PostDAO {
     // 초기 게시물 110개 가져오기
     public List<PostVO> postVOList(String boardName) {
         List<PostVO> list = new ArrayList<>();
-        // boardName 체크하는 메소드 있어야겠지?
-        // 100개만 가져오기
         try {
             conn = Common.getConnection();
             StringBuilder sql = new StringBuilder();
@@ -125,23 +123,25 @@ public class PostDAO {
     }
 
 
+    // 게시믈 조회 + 조회했을 때 조회 수를 증가시킵니다.
     public PostVO getPostById(int postId) {
         PostVO vo = new PostVO();
 
         try {
             conn = Common.getConnection();
-            StringBuilder sql = new StringBuilder();
-            sql.append("SELECT P.*, U.NICKNAME FROM POST P INNER JOIN USER_INFO U ");
-            sql.append("ON P.USER_ID = U.USER_ID ");
-            sql.append("WHERE POST_ID = ? ");
+            StringBuilder sql1 = new StringBuilder();
+            sql1.append("SELECT P.*, U.NICKNAME, U.IMG_URL AS USER_IMG_URL FROM POST P INNER JOIN USER_INFO U ");
+            sql1.append("ON P.USER_ID = U.USER_ID ");
+            sql1.append("WHERE POST_ID = ? ");
 
-            pstmt = conn.prepareStatement(sql.toString());
+            pstmt = conn.prepareStatement(sql1.toString());
             pstmt.setInt(1, postId);
             rSet = pstmt.executeQuery();
             if (rSet.next()) {
                 vo.setPostId(postId);
                 vo.setUserId(rSet.getInt("USER_ID"));
                 vo.setNickname(rSet.getString("NICKNAME"));
+                vo.setUserImgUrl(rSet.getString("USER_IMG_URL"));
                 vo.setRegTime(rSet.getString("REG_TIME"));
                 vo.setTitle(rSet.getString("TITLE"));
                 vo.setContents(rSet.getString("CONTENTS"));
@@ -151,25 +151,32 @@ public class PostDAO {
                 vo.setImgUrl(rSet.getString("IMG_URL"));
                 vo.setBoardName(rSet.getString("BOARD_NAME"));
             }
-            Common.close(rSet);
-            Common.close(pstmt);
-            Common.close(conn);
+            // 조회 수 증가 쿼리문
+            String sql2 = "UPDATE POST SET VIEWS = VIEWS + 1 WHERE POST_ID = ? ";
+            pstmt = conn.prepareStatement(sql2);
+            pstmt.setInt(1, postId);
+            pstmt.executeUpdate();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+        Common.close(rSet);
+        Common.close(pstmt);
+        Common.close(conn);
         return vo;
 
     }
 
 
-    public boolean postInsert (String userId, String title, String contents, String boardName, String imgUrl) {
+    // 게시물 등록
+    public boolean postInsert (int userId, String title, String contents, String boardName, String imgUrl) {
         int result = 0;
         String sql = "INSERT INTO POST(USER_ID, TITLE, CONTENTS, BOARD_NAME, IMG_URL) VALUES(?, ?, ?, ?, ?) ";
         try {
             conn = Common.getConnection();
             pstmt = conn.prepareStatement(sql);
 
-            pstmt.setString(1, userId);
+            pstmt.setInt(1, userId);
             pstmt.setString(2, title);
             pstmt.setString(3, contents);
             pstmt.setString(4, boardName);
@@ -188,5 +195,13 @@ public class PostDAO {
         if(result == 1) return true;
         else return false;
     }
+
+    // 게시물 수정
+//    public boolean postUpdate (String title, String contents, int post_id) {
+//
+//    }
+
+    // 게시물 삭제
+
 
 }
