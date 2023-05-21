@@ -50,6 +50,7 @@ public class PostController {
         return new ResponseEntity<>(post, HttpStatus.OK);
     }
 
+    // post insert
     @PostMapping("/lounge/post/insert")
     public ResponseEntity<Boolean> postRegister(@RequestBody Map<String, String> regData) {
         int getUserId = Integer.parseInt(regData.get("userId"));
@@ -58,11 +59,44 @@ public class PostController {
         String getBoardName = regData.get("boardName");
         String getImgUrl = regData.get("imgUrl");
         PostDAO dao = new PostDAO();
-        boolean insertResult = dao.postInsert(getUserId, getTitle, getContents, getBoardName, getImgUrl);
-        if (insertResult) System.out.println(HttpStatus.OK);
-        return new ResponseEntity<>(insertResult, HttpStatus.OK);
+        boolean Result = dao.postInsert(getUserId, getTitle, getContents, getBoardName, getImgUrl);
+        if (Result) System.out.println(HttpStatus.OK);
+        return new ResponseEntity<>(Result, HttpStatus.OK);
+    }
+    // post update
+    @PostMapping("/lounge/post/update")
+    public ResponseEntity<Boolean> postModifier(@RequestBody Map<String, String> modData) {
+        String getTitle = modData.get("title");
+        String getContents = modData.get("contents");
+        int getPostId = Integer.parseInt(modData.get("postId"));
+        PostDAO dao = new PostDAO();
+        boolean result = dao.postUpdate(getTitle, getContents, getPostId);
+        if (result) System.out.println(HttpStatus.OK);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+    // post recommned
+    @PostMapping("/lounge/post/recommend")
+    public ResponseEntity<Boolean> postRecommender (@RequestBody Map<String, String> data) {
+        int getUserId = Integer.parseInt(data.get("userId"));
+        int getPostId = Integer.parseInt(data.get("postId"));
+        PostDAO dao = new PostDAO();
+        boolean result = dao.recommendPost(getUserId, getPostId);
+        if (result) System.out.println(HttpStatus.OK);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+    // post undoRecommend
+    @PostMapping("/lounge/post/undoRecommend")
+    public ResponseEntity<Boolean> postUndoRecommender (@RequestBody Map<String, String> data) {
+        int getUserId = Integer.parseInt(data.get("userId"));
+        int getPostId = Integer.parseInt(data.get("postId"));
+        PostDAO dao = new PostDAO();
+        boolean result = dao.undoRecommendPost(getUserId, getPostId);
+        if (result) System.out.println(HttpStatus.OK);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+
+    // comment insert
     @PostMapping("/lounge/comment/insert")
     public ResponseEntity<Boolean> commentRegister(@RequestBody Map<String, String> regData) {
         int getUserId = Integer.parseInt(regData.get("userId"));

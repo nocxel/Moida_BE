@@ -22,7 +22,7 @@ public class CommentDAO {
     /**
      * postId로 댓글리스트 불러오기
      * @param postId 게시물 아이디
-     * @return
+     * @return 댓글 리스트
      */
     public List<CommentVO> getCommentsByPostId(int postId) {
         List<CommentVO> list = new ArrayList<>();
